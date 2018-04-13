@@ -133,7 +133,7 @@ if __name__=='__main__':
     model.add(Flatten())
     model.add(Dense(64))
     model.add(Activation('relu'))
-    model.add(Dropout(0.5))
+    model.add(Dropout(0.1))
     model.add(Dense(n_classes))
     model.add(Activation('softmax'))
 
