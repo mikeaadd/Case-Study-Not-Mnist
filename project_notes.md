@@ -23,3 +23,4 @@ __optimize model:__
  | 15 | 200 | adam | ReLU | 0.5 |0.791  |
  | 15 | 200 | nadam |  ReLU |0.5 | 0.807 |
  | 15 | 200 | nadam | sigmoid | 0.5 |0.642 |
+ | 15 | 200 | nadam | sigmoid | 0.5 |0.755 |
