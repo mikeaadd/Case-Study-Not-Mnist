@@ -6,7 +6,8 @@ import numpy as np
 
 # define path from current
 current = os.getcwd()
-data_dir = os.path.dirname(''.join([current,'/../notMNIST_small/']))
+data_dir = os.path.dirname(''.join([current,'/../data/']))
+load_dir = os.path.dirname('/Users/michaeladdonisio/Documents/Not-Mnist-Data/notMNIST_large/')
 # or define path from absolute
 #data_dir = os.path.dirname('/Users/drewthayer/galvanize/classes/dsi-cnn/data/')
 
@@ -14,19 +15,22 @@ data_dir = os.path.dirname(''.join([current,'/../notMNIST_small/']))
 letters = ['A','B','C','D','E','F','G','H','I','J']
 letterpaths = []
 for letter in letters:
-    letterpaths.append(data_dir + '/' + letter + '/')
+    letterpaths.append(load_dir + '/' + letter + '/')
 
 # create new train/test directories
 trainpath = data_dir + '/train/' # must match dirs in loop below
 testpath = data_dir + '/test/'
+validpath = data_dir + '/validation/'
 # os.mkdir(trainpath)
 # os.mkdir(testpath)
+# os.mkdir(validpath)
 #
 # for letter in letters:
-#     os.mkdir(trainpath + letter + '/');
-#     os.mkdir(testpath + letter + '/');
-#
-# print ("Test/Train paths are created")
+#     # os.mkdir(trainpath + letter + '/');
+#     # os.mkdir(testpath + letter + '/');
+#     os.mkdir(validpath + letter + '/');
+
+print ("Test/Train paths are created")
 
 
 
@@ -38,15 +42,20 @@ for idx, letter in enumerate(letters):
     readpath = letterpaths[idx]
     writepath_train = trainpath + '/' + letter
     writepath_test = testpath + '/' + letter
-
+    writepath_validation = validpath + '/' + letter
+    print(readpath)
     # read in data
     files = np.array([f for f in listdir(readpath) if isfile(join(readpath, f))])
 
     # do the split
-    test_files = np.random.choice(files, int(percent_test*len(files)))
-    for file in test_files:
-        copyfile(readpath + file, writepath_test + '/' + file)
+    # test_files = np.random.choice(files, int(percent_test*len(files)))
+    # for file in test_files:
+    #     copyfile(readpath + file, writepath_test + '/' + file)
+    #
+    # train_files = files[~np.in1d(files, test_files)]
+    # for file in train_files:
+    #     copyfile(readpath + file, writepath_train + '/' + file)
 
-    train_files = files[~np.in1d(files, test_files)]
-    for file in train_files:
-        copyfile(readpath + file, writepath_train + '/' + file)
+    valid_files = np.random.choice(files, 350)
+    for file in valid_files:
+        copyfile(readpath + file, writepath_validation + '/' + file)

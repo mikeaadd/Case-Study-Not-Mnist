@@ -9,72 +9,86 @@ import h5py # need this to read weights saved in .h5 files
 import numpy as np
 import matplotlib.pyplot as plt
 
-# define paths from current working dir (same as training)
-current = os.getcwd()
-data_dir = os.path.dirname(''.join([current,'/../data/']))
-trainpath = data_dir + '/cat_dog/train/' # must match dirs in loop below
-testpath = data_dir + '/cat_dog/validation/'
+# def plot_predictions(y_pred,filename):
+#     xx = range(y_pred.shape[0])
+#     fig, ax = plt.subplots(1,1,figsize=(8,4))
+#     for i in range(y_pred.shape[1]):
+#         ax.plot(xx,y_pred[:,i])
+#         ax.set_title('histogram of predictions')
 
-# parameterize and create an image generator to read in test data
-test_datagen = ImageDataGenerator(rescale=1. / 255) # if 'predict' doesn't work try not using rescale
-img_width, img_height = 150, 150
-batch_size = 16
-nb_validation_samples = 72 # total number of validation images
+def plot_predictions(y_pred,filename):
+    sums = np.sum(y_pred, axis=0)
+    labels = ['A','B','C','D','E','F','G','H','I','J']
+    plt.bar(labels,sums)
+    plt.title('predictions')
+    plt.savefig(filename +'.png',dpi=250)
+    plt.close()
 
-validation_generator = test_datagen.flow_from_directory(
-    testpath,
-    target_size=(img_width, img_height),
-    batch_size=batch_size,
-    class_mode='binary')
+if __name__=='__main__':
+    # define path from current working directory
+    current = os.getcwd()
+    data_dir = os.path.dirname(''.join([current,'/../data/']))
+    train_data_dir = data_dir + '/train/' # must match dirs in loop below
+    test_data_dir = data_dir + '/test/'
 
-# make sure input shape is right
-if K.image_data_format() == 'channels_first':
-    input_shape = (3, img_width, img_height)
-else:
-    input_shape = (img_width, img_height, 3)
+    # parameterize and create an image generator to read in test data
+    test_datagen = ImageDataGenerator(rescale=1. / 255) # if 'predict' doesn't work try not using rescale
+    img_width, img_height = 28, 28
+    batch_size = 200
+    nb_validation_samples = 72 # total number of validation images
+    savename = 'test1'
 
-# build a model
-model = Sequential()
-model.add(Conv2D(32, (3, 3), input_shape=input_shape))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+    test_generator = test_datagen.flow_from_directory(
+        test_data_dir,
+        target_size=(img_width, img_height),
+        color_mode='grayscale',
+        batch_size=batch_size,
+        class_mode='categorical')
 
-model.add(Conv2D(32, (3, 3)))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+    # make sure input shape is right
+    # if K.image_data_format() == 'channels_first':
+    #     input_shape = (3, img_width, img_height)
+    # else:
+    #     input_shape = (img_width, img_height, 3)
 
-model.add(Conv2D(64, (3, 3)))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+    # build a model
+    # model = Sequential()
+    # model.add(Conv2D(32, (3, 3), input_shape=input_shape))
+    # model.add(Activation('relu'))
+    # model.add(MaxPooling2D(pool_size=(2, 2)))
+    #
+    # model.add(Conv2D(32, (3, 3)))
+    # model.add(Activation('relu'))
+    # model.add(MaxPooling2D(pool_size=(2, 2)))
+    #
+    # model.add(Conv2D(64, (3, 3)))
+    # model.add(Activation('relu'))
+    # model.add(MaxPooling2D(pool_size=(2, 2)))
+    #
+    # model.add(Flatten())
+    # model.add(Dense(64))
+    # model.add(Activation('relu'))
+    # model.add(Dropout(0.5))
+    # model.add(Dense(1))
+    # model.add(Activation('sigmoid'))
 
-model.add(Flatten())
-model.add(Dense(64))
-model.add(Activation('relu'))
-model.add(Dropout(0.5))
-model.add(Dense(1))
-model.add(Activation('sigmoid'))
+    # load saved weights
+    from keras.models import load_model
+    model = load_model(current + '/' + '30_epochs.h5')
+    print(model.summary())  # As a reminder.
 
-# load saved weights
-model.load_weights('cnn_10epochsbatch4.h5')
+    # compile model
+    model.compile(loss='categorical_crossentropy', # binary_crossentropy
+                  optimizer='rmsprop',
+                  metrics=['accuracy'])
 
-# compile model
-model.compile(loss='binary_crossentropy',
-              optimizer='rmsprop',
-              metrics=['accuracy']) # might be able to add more metrics here?
+    # test model
+    score = model.evaluate_generator(test_generator, nb_validation_samples // batch_size + 1) # read about size thing on stack exchange
+    metrics = model.metrics_names
+    # model.metrics_names to get score labels
+    print('{} = {}'.format(metrics[0],score[0]))
+    print('{} = {}'.format(metrics[1],score[1]))
+    y_pred = model.predict_generator(test_generator, nb_validation_samples // batch_size + 1, verbose = 1)
 
-# test model
-score = model.evaluate_generator(validation_generator, nb_validation_samples // batch_size + 1) # read about size thing on stack exchange
-metrics = model.metrics_names
-# model.metrics_names to get score labels
-print('{} = {}'.format(metrics[0],score[0]))
-print('{} = {}'.format(metrics[1],score[1]))
-y_pred = model.predict_generator(validation_generator, nb_validation_samples // batch_size + 1, verbose = 1)
-
-# plot predictions (probability of class0, class1)
-fig, ax = plt.subplots(1,2,figsize=(8,4))
-ax[0].hist(y_pred)
-ax[0].set_title('histogram of predictions')
-ax[1].plot(range(len(y_pred)),y_pred,'og')
-ax[1].set_title('Predictions')
-plt.savefig('model_figs/predictions_plot.png',dpi=250)
-plt.close()
+    # plot predictions (probability of class0, class1)
+    plot_predictions(y_pred,'figs/' + savename + '_predictions')
