@@ -9,12 +9,18 @@ import h5py # need this to read weights saved in .h5 files
 import numpy as np
 import matplotlib.pyplot as plt
 
+# def plot_predictions(y_pred,filename):
+#     xx = range(y_pred.shape[0])
+#     fig, ax = plt.subplots(1,1,figsize=(8,4))
+#     for i in range(y_pred.shape[1]):
+#         ax.plot(xx,y_pred[:,i])
+#         ax.set_title('histogram of predictions')
+
 def plot_predictions(y_pred,filename):
-    fig, ax = plt.subplots(1,2,figsize=(8,4))
-    ax[0].hist(y_pred)
-    ax[0].set_title('histogram of predictions')
-    ax[1].plot(range(len(y_pred)),y_pred,'og')
-    ax[1].set_title('Predictions')
+    sums = np.sum(y_pred, axis=0)
+    labels = ['A','B','C','D','E','F','G','H','I','J']
+    plt.bar(labels,sums)
+    plt.title('predictions')
     plt.savefig(filename +'.png',dpi=250)
     plt.close()
 
