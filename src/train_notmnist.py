@@ -98,12 +98,12 @@ if __name__=='__main__':
     # setup parameters
     img_width, img_height = 28,28
     batch_size = 200 # number of pictures in each batch
-    n_epochs = 15
+    n_epochs = 30
     n_classes = 10
     pool_size = (2,2)
     nb_train_samples = 15365
     nb_validation_samples = 3363
-    save_fname = 'test2'
+    save_fname = '30_epochs'
 
     ''' end input parameters '''
 
@@ -168,7 +168,7 @@ if __name__=='__main__':
         class_mode='categorical')
 
     ''' fit model '''
-    summary = model.summary() # I think this does something cool
+    summary = model.summary() # prints table of model structure
 
     history = model.fit_generator(
         train_generator,
