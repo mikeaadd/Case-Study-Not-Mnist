@@ -8,6 +8,26 @@ from keras import backend as K
 import h5py # need this to read weights saved in .h5 files
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
+from sklearn.metrics import classification_report
+import pdb
+import pandas as pd
+
+def classifaction_report_csv(report):
+    report_data = []
+    lines = report.split('\n')
+    for line in lines[2:-3]:
+        row = {}
+        row_data = line.split('      ')
+        row['class'] = row_data[0]
+        row['precision'] = float(row_data[1])
+        row['recall'] = float(row_data[2])
+        row['f1_score'] = float(row_data[3])
+        row['support'] = float(row_data[4])
+        report_data.append(row)
+    dataframe = pd.DataFrame.from_dict(report_data)
+    dataframe.to_csv('classification_report.csv', index = False)
+    return dataframe
 
 # def plot_predictions(y_pred,filename):
 #     xx = range(y_pred.shape[0])
@@ -74,7 +94,7 @@ if __name__=='__main__':
 
     # load saved weights
     from keras.models import load_model
-    model = load_model(current + '/' + '30_epochs.h5')
+    model = load_model(current + '/' + sys.argv[1])
     print(model.summary())  # As a reminder.
 
     # compile model
@@ -88,7 +108,11 @@ if __name__=='__main__':
     # model.metrics_names to get score labels
     print('{} = {}'.format(metrics[0],score[0]))
     print('{} = {}'.format(metrics[1],score[1]))
-    y_pred = model.predict_generator(test_generator, nb_validation_samples // batch_size + 1, verbose = 1)
+    y_pred = model.predict_generator(test_generator, verbose = 1)
+
+    y_test = np.argmax(y_pred, axis=1) # Convert one-hot to index
+    report = classification_report(test_generator.classes[test_generator.index_array], y_test)
+    print(classifaction_report_csv(report))
 
     # plot predictions (probability of class0, class1)
     plot_predictions(y_pred,'figs/' + savename + '_predictions')
