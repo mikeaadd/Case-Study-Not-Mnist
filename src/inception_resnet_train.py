@@ -9,6 +9,7 @@ from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import Activation, Dropout, Flatten, Dense
 from keras import backend as K
+from keras.optimizers import RMSprop
 # from sklearn.model_selection import train_test_split
 # from keras.models import Sequential
 # from keras.layers import Conv2D, MaxPooling2D
@@ -98,16 +99,12 @@ if __name__=='__main__':
     # setup parameters
     img_width, img_height = 28,28
     batch_size = 200 # number of pictures in each batch
-    n_epochs = 30
+    n_epochs = 15
     n_classes = 10
     pool_size = (2,2)
     nb_train_samples = 15365
     nb_validation_samples = 3363
-<<<<<<< HEAD
-    save_fname = '30_epochs_drop9'
-=======
-    save_fname = '10_epochs_nadam_relu'
->>>>>>> master
+    save_fname = 'nadam'
 
     ''' end input parameters '''
 
@@ -121,15 +118,15 @@ if __name__=='__main__':
     model = Sequential()
 
     # convolution layers
-    model.add(Conv2D(32, kernel_size=(2, 2), strides=(1, 1), input_shape=input_shape))
+    model.add(Conv2D(32, (3, 3), input_shape=input_shape))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=pool_size))
 
-    model.add(Conv2D(32, kernel_size=(2, 2), strides=(1, 1), input_shape=input_shape))
+    model.add(Conv2D(32, (3, 3)))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=pool_size))
 
-    model.add(Conv2D(32, kernel_size=(2, 2), strides=(1, 1), input_shape=input_shape))
+    model.add(Conv2D(64, (3, 3)))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=pool_size))
 
@@ -137,10 +134,11 @@ if __name__=='__main__':
     model.add(Flatten())
     model.add(Dense(64))
     model.add(Activation('relu'))
-    model.add(Dropout(0.9))
+    model.add(Dropout(0.5))
     model.add(Dense(n_classes))
     model.add(Activation('softmax'))
 
+    #rmsprop = RMSprop(lr=0.001, rho=0.9, epsilon=None, decay=0.0)
     model.compile(loss='categorical_crossentropy', # binary_crossentropy
                   optimizer='nadam',
                   metrics=['accuracy'])
@@ -172,7 +170,7 @@ if __name__=='__main__':
         class_mode='categorical')
 
     ''' fit model '''
-    summary = model.summary() # prints table of model structure
+    summary = model.summary() # I think this does something cool
 
     history = model.fit_generator(
         train_generator,

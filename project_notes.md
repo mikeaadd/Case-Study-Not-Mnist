@@ -23,9 +23,18 @@ __optimize model:__
  | 15 | 200 | adam | ReLU | 0.5 |0.791  |
  | 15 | 200 | nadam |  ReLU |0.5 | 0.807 |
  | 15 | 200 | nadam | sigmoid | 0.5 |0.642 |
+<<<<<<< HEAD
  | 15 | 200 | nadam | ReLU | 0.1 |0.755 | 0.725 |
  | 15 | 200 | nadam | ReLU | 0.1 |0.761 | 0.779 |
 
 
  kernal size: default (3,3)
   -  (2,2) --> train accuracy = 0.788
+=======
+ | 30 | 200 | nadam | ReLU | 0.1 |0.755 | 0.725 |
+ | 30 | 200 | nadam | ReLU | 0.1 |0.761 | 0.779 |
+ | 30 | 200 | nadam | ReLU | 0.9 |0.880 | 0.879 |
+
+
+ best Conv2D params: kernal:(3,3), strides:(1,1), padding:'same'
+>>>>>>> master
