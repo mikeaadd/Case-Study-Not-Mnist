@@ -26,7 +26,6 @@ def classifaction_report_csv(report):
         row['support'] = float(row_data[4])
         report_data.append(row)
     dataframe = pd.DataFrame.from_dict(report_data)
-    dataframe.to_csv('classification_report.csv', index = False)
     return dataframe
 
 # def plot_predictions(y_pred,filename):
