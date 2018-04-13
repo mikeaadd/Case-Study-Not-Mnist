@@ -15,12 +15,17 @@ __basic model:__ get a basic KERAS sequential CNN model to run
 
 __optimize model:__
 
- | epochs    | batch size | optimization |  activation | dropout |  training validation scores  |
- |----------|----------|---------|--------|------|----|
+ | epochs    | batch size | optimization |  activation | dropout |  training accuracy | test accuracy |
+ |----------|----------|---------|--------|------|----|----|
  | 15 | 200 | sgd | RelU | 0.5 | 0.661 |
  | 15 | 200 | adadelta | ReLU |0.5 | 0.787 |
  | 15 | 200 | adagrad | ReLU | 0.5 |0.786 |
  | 15 | 200 | adam | ReLU | 0.5 |0.791  |
  | 15 | 200 | nadam |  ReLU |0.5 | 0.807 |
  | 15 | 200 | nadam | sigmoid | 0.5 |0.642 |
- | 15 | 200 | nadam | sigmoid | 0.5 |0.755 |
+ | 15 | 200 | nadam | ReLU | 0.1 |0.755 | 0.725 |
+ | 15 | 200 | nadam | ReLU | 0.1 |0.761 | 0.779 |
+
+
+ kernal size: default (3,3)
+  -  (2,2) --> train accuracy = 0.788

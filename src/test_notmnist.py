@@ -36,7 +36,7 @@ if __name__=='__main__':
     img_width, img_height = 28, 28
     batch_size = 200
     nb_validation_samples = 72 # total number of validation images
-    savename = 'test1'
+    savename = '30_epochs_drop5'
 
     test_generator = test_datagen.flow_from_directory(
         test_data_dir,

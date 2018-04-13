@@ -103,7 +103,7 @@ if __name__=='__main__':
     pool_size = (2,2)
     nb_train_samples = 15365
     nb_validation_samples = 3363
-    save_fname = '30_epochs'
+    save_fname = '30_epochs_drop9'
 
     ''' end input parameters '''
 
@@ -133,7 +133,7 @@ if __name__=='__main__':
     model.add(Flatten())
     model.add(Dense(64))
     model.add(Activation('relu'))
-    model.add(Dropout(0.1))
+    model.add(Dropout(0.9))
     model.add(Dense(n_classes))
     model.add(Activation('softmax'))
 
