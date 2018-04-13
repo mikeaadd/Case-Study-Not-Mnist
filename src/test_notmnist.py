@@ -112,7 +112,7 @@ if __name__=='__main__':
 
     y_test = np.argmax(y_pred, axis=1) # Convert one-hot to index
     report = classification_report(test_generator.classes[test_generator.index_array], y_test)
-    print(classifaction_report_csv(report))
+    report_df = classifaction_report_csv(report)
 
     # plot predictions (probability of class0, class1)
     plot_predictions(y_pred,'figs/' + savename + '_predictions')
