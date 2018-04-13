@@ -19,8 +19,8 @@ __basic model:__ get a basic KERAS sequential CNN model to run
 
 __optimize model:__
 
- | epochs    | batch size | optimization |  activation | dropout |  training validation scores  |
- |----------|----------|---------|--------|------|----|
+ | epochs    | batch size | optimization |  activation | dropout |  training accuracy | test accuracy |
+ |----------|----------|---------|--------|------|----|----|
  | 15 | 200 | sgd | RelU | 0.5 | 0.661 |
  | 15 | 200 | adadelta | ReLU |0.5 | 0.787 |
  | 15 | 200 | adagrad | ReLU | 0.5 |0.786 |
@@ -28,6 +28,12 @@ __optimize model:__
  | 15 | 200 | nadam |  ReLU |0.5 | 0.807 |
  | 15 | 200 | nadam | sigmoid | 0.5 |0.642 |
  | 15 | 200 | nadam | sigmoid | 0.5 |0.755 |
+ | 30 | 200 | nadam | ReLU | 0.1 |0.755 | 0.725 |
+ | 30 | 200 | nadam | ReLU | 0.1 |0.761 | 0.779 |
+ | 30 | 200 | nadam | ReLU | 0.9 |0.880 | 0.879 |
+
+
+ best Conv2D params: kernal:(3,3), strides:(1,1), padding:'same'
 
 
 
